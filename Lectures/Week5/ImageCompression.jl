@@ -27,10 +27,12 @@ default(size=(400, 300), fmt = :png) # Default plot size, change output format t
 
 # Load image from the Internet:
 # ---------------------------------
-#imageadress = "https://cdn.images.express.co.uk/img/dynamic/151/590x/secondary/spacex-launch-why-starman-tesla-roadster-david-bowie-falcon-heavy-1225205.jpg";
+imageadress = "https://cdn.images.express.co.uk/img/dynamic/151/590x/secondary/spacex-launch-why-starman-tesla-roadster-david-bowie-falcon-heavy-1225205.jpg";
 #imageadress = "http://pressarchive.theoldglobe.org/_img/pressphotos/pre2008%20photos/aveQ5.jpg";
 #imageadress = "https://vgc.no/drfront/images/2018/02/12/c=1114,366,1920,1048;w=262;h=143;384858.jpg";
-imageadress = "https://www.dagbladet.no/images/73342156.jpg?imageId=73342156&x=15.602322206096&y=10.807860262009&cropw=72.060957910015&croph=61.764705882353&width=912&height=521&compression=80";
+#imageadress = "https://www.dagbladet.no/images/73342156.jpg?imageId=73342156&x=15.602322206096&y=10.807860262009&cropw=72.060957910015&croph=61.764705882353&width=912&height=521&compression=80";
+#imageadress = "http://lynski.no/wp-content/uploads/2016/09/Anders_H%C3%B8st_OSM_Gautefall_seier.jpg"
+
 # ---------------------------------
 #imageadress = "https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png";
 #imageadress = "http://www.johnloomis.org/ece563/notes/basics/components/mandrill/Mandrill.jpg";
@@ -39,23 +41,20 @@ imageadress = "https://www.dagbladet.no/images/73342156.jpg?imageId=73342156&x=1
 myimage = download(imageadress); # Needs package ImageMagick
 Ximg = load(myimage);
 
-original = plot(Ximg, title = "The original image to be compressed by k-means color clustering") #, size = (1000,420))
+original = plot(Ximg, title = string("The original image to be compressed by k-means color clustering"), size = (1000,420))
 display(original)
 ## Find image size and reshape to prepare pixel-data for clustering
 n,m = size(Ximg); nm = n*m;
 
-
 mat = channelview(Ximg); # Convert from image format to 3 x n x m (0-1).
 
-# By using the <https://se.mathworks.com/help/matlab/ref/reshape.html
-# reshape function in MATLAB> we can make a three-column matrix X so that
+# By using the reshape function we can make a three-column matrix X so that
 # each line in X is the RGB-vector of a pixel position of the image (Ximg).
 X = float( reshape( permutedims(mat, (2,3,1)), (nm, 3) ) ); # Channels last, vectorize image dims, convert to float
 
-# +
 include("mykmeans.jl")
 ## Cluster RGB-pixel values (in X) into k color clusters by the k-means algorithm
-k = 16; # The number of clusters
+k = 256; # The number of clusters
 
 @time begin
 Cid, Ccenters, J, cs = mykmeans(X,k); # This will take some time...
@@ -74,7 +73,7 @@ display(Jplot)
 csplot = plot(cs, line = (:dot, 1), marker = ([:hex :d], 3, 0.8, Plots.stroke(3, :gray)), title = "Cluster sizes", label = "", size = (500, 300))
 display(csplot)
 ## Reshape and display cluster labels into associated image
-cl = reshape(Cid,(n,m)); # cl is an image (n x m - matrix) viewing the cluster labels
+cl = reshape(Cid,(n,m)); # cl is an image (n x m - matrix) suitable for viewing the cluster labels
 labelplot = plot(Gray.(cl/k), title = string("Image view of the pixelwise cluster labels for ", k, " clusters"), size = (1000,420))
 display(labelplot)
 
