@@ -1,7 +1,7 @@
 include("allDist.jl")
 using Random
 function mykmeans(X, k; tol = 1e-5)
-#function [Cid, Ccenters, J] = mykmeans(X,k; tol = 1e-5) # (MATLAB-name)
+#function [Cid, C, J, cs] = mykmeans(X,k; tol = 1e-5) # (MATLAB-name)
 # ------------- Our implementation of the k-means algorithm -------------------
 # INPUT:
 # X        - data matrix (observed datapoints are rows in X).
@@ -27,6 +27,7 @@ while abs(msdnew-msdold) > tol    # Repeat until convergence of the objective fu
     # Here we calculate all the distances between X-rows and the cluster centers
     for i = 1:k
         D2[:,i] = allDist(X,C[i,:]).^2; # Squared euclidean distances of all samples to i-th cluster center.
+        #D2[:,i] = sum((X.-C[[i],:]).^2, dims =2) # Also the squared euclidean distances of all samples to i-th cluster center.
     end
 
     # Identify shortest distance and corresponding cluster number for each observation:
@@ -38,8 +39,10 @@ while abs(msdnew-msdold) > tol    # Repeat until convergence of the objective fu
 
     # Update the cluster centers based on the labelling of Cid:
     for i = 1:k
-        rows_i = vec(Cid .== i);  # Find row-numbers of the i-th cluster members. Alternative syntax: #rows_i = findall(x->x==i,Cid)
-        cs[i]  = sum(rows_i)      # Number of samples in cluster i.
+        # rows_i = vec(Cid .== i);  # Find row-numbers of the i-th cluster members.
+        # cs[i]  = sum(rows_i)      # Number of samples in cluster i.
+        rows_i = getindex.(findall(x -> x == i, Cid),1) # Find row-numbers of the i-th cluster members.
+        cs[i] = length(rows_i)      # Number of samples in cluster i.
         if cs[i]>0                # Update if i-th cluster is non-empty.
         C[i,:] = sum(X[rows_i,:],dims = 1)./cs[i] # Update cluster centers as the mean of the cluster members.
         end
