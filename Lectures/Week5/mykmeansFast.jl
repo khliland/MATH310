@@ -1,5 +1,5 @@
 using Random
-function mykmeansFast0(X, k; tol = 5e-3)
+function mykmeansFast(X, k; tol = 5e-3)
 # ---------- A faster implementation of the k-means algorithm -----------------
 # INPUT: ----------------------------------------------------------------------
 # X        - data matrix (observed datapoints are rows in X).

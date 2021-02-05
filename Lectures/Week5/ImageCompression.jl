@@ -24,10 +24,10 @@ See also http://stanford.edu/class/ee103/lectures/k-means_slides.pdf =#
 
 ## Load some image from the Internet before doing the pixel-clustering:
 #imageadress = "https://cdn.images.express.co.uk/img/dynamic/151/590x/secondary/spacex-launch-why-starman-tesla-roadster-david-bowie-falcon-heavy-1225205.jpg";
-imageadress = "http://pressarchive.theoldglobe.org/_img/pressphotos/pre2008%20photos/aveQ5.jpg";
+#imageadress = "http://pressarchive.theoldglobe.org/_img/pressphotos/pre2008%20photos/aveQ5.jpg";
 #imageadress = "https://vgc.no/drfront/images/2018/02/12/c=1114,366,1920,1048;w=262;h=143;384858.jpg";
 #imageadress = "https://www.dagbladet.no/images/73342156.jpg?imageId=73342156&x=15.602322206096&y=10.807860262009&cropw=72.060957910015&croph=61.764705882353&width=912&height=521&compression=80";
-#imageadress = "http://lynski.no/wp-content/uploads/2016/09/Anders_H%C3%B8st_OSM_Gautefall_seier.jpg"
+imageadress = "http://lynski.no/wp-content/uploads/2016/09/Anders_H%C3%B8st_OSM_Gautefall_seier.jpg"
 # ---------------------------------
 #imageadress = "https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png";
 #imageadress = "http://www.johnloomis.org/ece563/notes/basics/components/mandrill/Mandrill.jpg";
@@ -52,11 +52,11 @@ mat = channelview(Ximg); # Convert from image format to 3 x n x m (0-1).
 X = float( reshape( permutedims(mat, (2,3,1)), (nm, 3) ) ); # Channels last, vectorize image dims, convert to float
 
 ## Cluster RGB-pixel values (in X) into k color clusters by the k-means algorithm
-include("mykmeans.jl")      # Our clustering algorithm
-include("mykmeansFast0.jl") # Our "fast" clustering algorithm
+include("mykmeans.jl")     # Our clustering algorithm
+include("mykmeansFast.jl") # Our "fast" clustering algorithm
 k = 32; # The number of clusters
 @time begin
-Cid, Ccenters, J, cs = mykmeansFast0(X,k); # This may take some time...
+Cid, Ccenters, J, cs = mykmeansFast(X,k); # This may take some time...
                                     # Cid:      a vector of cluster labels for the rows in X.
                                     # Ccenters: the resulting k cluster centers.
                                     # J:        the clustering objective function values
