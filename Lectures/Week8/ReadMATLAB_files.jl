@@ -2,5 +2,7 @@
 
 using MAT
 vars = matread("spectra.mat") # read data into dictionary
-X= vars["NIR"]
-y = vars["octane"]
+X    = vars["NIR"]
+y    = vars["octane"]
+# A description of the dataset:
+vars["Description"]
