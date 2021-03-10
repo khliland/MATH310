@@ -109,7 +109,7 @@ plsmin = argmin(RMS_CVpls)[1];
 
 # Compare the two selected models by plotting their regression coeffs togehter
 # (re-calculate the regression coeffs based on the complete dataset).
-plt_compare = plot(βPCR[:,pcmin], label = "PCR", title = string("Regression coeffs for PCR(", pcmin, ") and RR(",λmin,")"))
+plt_compare = plot(βPCR[:,pcrmin], label = "PCR", title = string("Regression coeffs for PCR(", pcrmin, ") and RR(",λmin,")"))
 plt_compare = plot!(βRR, label = "RR")
 plt_compare = plot!(βPLS[:,plsmin], label = "PLS")
 display(plt_compare)
